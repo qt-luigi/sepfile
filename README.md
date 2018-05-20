@@ -81,7 +81,7 @@ $ ls
 target.html   target.html.1 target.html.2
 ```
 
-See the separating files.
+See the separating files.
 
 ```sh
 $ cat target.html.1 
