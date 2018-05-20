@@ -62,7 +62,7 @@ $ cat target.html
 </html>
 ```
 
-When you separate the target.html by "<br>" line of between "foo" to "bar", Execute following `sepfile` command:
+When you separate the target.html by "\<br\>" line of between "foo" to "bar", Execute following `sepfile` command:
 
 ```sh
 $ sepfile target.html "<br>"
@@ -102,7 +102,7 @@ $ cat target.html.2
 </html>
 ```
 
-You specified "<br>" line, not "  <br>" line. A keyword line must equals completely.
+You specified "\<br\>" line, not "  \<br\>" line. A keyword line must equals completely.
 
 ## License
 
