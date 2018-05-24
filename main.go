@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 )
 
@@ -65,15 +66,17 @@ func separate(srcfile, kwdline, outpath string) error {
 	defer f.Close()
 
 	basename := filepath.Base(srcfile)
+	rtncd := returnCode()
+
 	seq := 1
 	lines := make([]string, 0)
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		if text := scanner.Text(); text != kwdline {
-			lines = append(lines, text+"\n")
+			lines = append(lines, text)
 		} else {
-			output(outpath, outName(basename, seq), lines)
+			output(outpath, outName(basename, seq), lines, rtncd)
 			seq++
 			lines = make([]string, 0)
 		}
@@ -83,8 +86,9 @@ func separate(srcfile, kwdline, outpath string) error {
 	}
 
 	if len(lines) > 0 {
-		output(outpath, outName(basename, seq), lines)
+		output(outpath, outName(basename, seq), lines, rtncd)
 	}
+
 	return nil
 }
 
@@ -92,7 +96,15 @@ func outName(basename string, seq int) string {
 	return basename + "." + strconv.Itoa(seq)
 }
 
-func output(outpath, sepfile string, lines []string) error {
+func returnCode() string {
+	if runtime.GOOS == "windows" {
+		return "\r\n"
+	} else {
+		return "\n"
+	}
+}
+
+func output(outpath, sepfile string, lines []string, rtncd string) error {
 	f, err := os.Create(filepath.Join(outpath, sepfile))
 	if err != nil {
 		return err
@@ -100,7 +112,7 @@ func output(outpath, sepfile string, lines []string) error {
 	defer f.Close()
 
 	for _, line := range lines {
-		if _, err := f.WriteString(line); err != nil {
+		if _, err := f.WriteString(line + rtncd); err != nil {
 			return err
 		}
 	}
